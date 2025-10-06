@@ -1,0 +1,83 @@
+name: grype-scan
+variant: scratch
+shell: /bin/bash
+dependencies:
+  - stage: base
+  - stage: glibc
+  - stage: stargz-snapshotter
+  - stage: crun
+  - stage: youki
+  - stage: gvisor
+  - stage: spin
+  - stage: kata-containers
+  - stage: wasmedge
+  - stage: ecr-credential-provider
+  - stage: lldpd
+  - stage: nebula
+  - stage: newt
+  - stage: tailscale
+  - stage: cloudflared
+  - stage: zerotier
+  - stage: metal-agent
+  - stage: qemu-guest-agent
+  - stage: xen-guest-agent
+  - stage: fuse3
+  - stage: iscsi-tools
+  - stage: nonfree-kmod-nvidia-lts
+  - stage: nonfree-kmod-nvidia-production
+steps:
+  - env:
+      SYFT_FORMAT_PRETTY: 1
+      SYFT_FORMAT_SPDX_JSON_DETERMINISTIC_UUID: 1
+      SOURCE_DATE_EPOCH: {{ .BUILD_ARG_SOURCE_DATE_EPOCH }}
+      GOPATH: /tmp/go
+      GRYPE_EXTRA_ARGS: "{{ .BUILD_ARG_GRYPE_EXTRA_ARGS }}"
+  - network: default
+    cachePaths:
+      - /.cache/go-build
+      - /tmp/go/pkg
+      - /root/.cache/grype/db
+    prepare:
+      - |
+        cd /pkg
+        go mod download
+  - cachePaths:
+      - /.cache/go-build
+      - /tmp/go/pkg
+      - /root/.cache/grype/db
+    build:
+      - |
+        mkdir -p /results
+        cd /pkg
+
+        go tool -modfile=go.mod \
+        github.com/anchore/syft/cmd/syft \
+        scan --from dir /rootfs/usr/local/share/spdx \
+        --select-catalogers "+sbom-cataloger" \
+        --source-name "Talos extensions" --source-version {{ .BUILD_ARG_TAG }} \
+        -o spdx-json > /results/combined.spdx.json
+  - network: default
+    cachePaths:
+      - /.cache/go-build
+      - /tmp/go/pkg
+      - /root/.cache/grype/db
+    build:
+      - |
+        mkdir -p /results
+        cd /pkg
+
+        GRYPE_COMMAND_ARGS=(
+          "sbom:/results/combined.spdx.json"
+          "-vv"
+        )
+
+        if [ "${GRYPE_EXTRA_ARGS}" != '<no value>' ]; then
+          GRYPE_COMMAND_ARGS+=(${GRYPE_EXTRA_ARGS})
+        fi
+
+        go tool -modfile=go.mod \
+        github.com/anchore/grype/cmd/grype \
+        "${GRYPE_COMMAND_ARGS[@]}" 2>&1 | tee /results/grype-scan.log
+finalize:
+  - from: /results
+    to: /

@@ -1,0 +1,59 @@
+name: multipathd
+depends:
+  - service: cri
+  - network:
+       - addresses
+       - connectivity
+       - hostname
+       - etcfiles
+container:
+  entrypoint: /usr/local/sbin/multipathd
+  args:
+    - -f
+  security:
+    maskedPaths: []
+    readonlyPaths: []
+    writeableSysfs: true
+  mounts:
+    # ld-musl-x86_64.so.1
+    - source: /lib
+      destination: /lib
+      type: bind
+      options:
+        - bind
+        - ro
+    # libcrypto.so and libc.so
+    - source: /usr/lib
+      destination: /usr/lib
+      type: bind
+      options:
+        - bind
+        - ro
+    # multipath libs
+    - source: /usr/local/lib
+      destination: /usr/local/lib
+      type: bind
+      options:
+        - bind
+        - ro
+    - source: /usr/local/sbin
+      destination: /usr/local/sbin
+      type: bind
+      options:
+        - bind
+        - ro
+    - source: /var/lib/multipath
+      destination: /var/lib/multipath
+      type: bind
+      options:
+        - rshared
+        - rbind
+        - rw
+    - source: /run/lock/multipath
+      destination: /run/lock/multipath
+      type: bind
+      options:
+        - rshared
+        - rbind
+        - rw
+restart: always
