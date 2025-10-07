@@ -6,7 +6,7 @@ container:
     readonlyPaths: []
     writeableSysfs: true
   #   writeableRootfs: true
-  entrypoint: /usr/local/sbin/multipathd/multipathd
+  entrypoint: /usr/local/sbin/multipathd
   args:
     - --start
     - --respawn-delay 2
@@ -36,7 +36,13 @@ container:
       options:
         - bind
         - ro
-    - source: /usr/local/sbin
+    - source: /usr/local/lib64
+      destination: /usr/local/lib64
+      type: bind
+      options:
+        - bind
+        - ro
+    - source: /usr/local/sbin/multipathd
       destination: /usr/local/sbin
       type: bind
       options:
