@@ -1,14 +1,4 @@
 name: multipathd
-depends:
-  - network:
-    - addresses
-    - connectivity
-    - hostname
-    - etcfiles
-  - service: udevd
-  - path: /dev/mapper/control
-  - service: cri
-  - configuration: false
 container:
   security:
     rootfsPropagation: shared
@@ -42,12 +32,6 @@ container:
       options:
         - bind
         - ro
-    - source: /usr/local/lib64
-      destination: /usr/local/lib64
-      type: bind
-      options:
-        - bind
-        - ro
     - source: /usr/local/sbin
       destination: /usr/local/sbin
       type: bind
@@ -74,4 +58,14 @@ container:
         - rshared
         - rbind
         - rw
+depends:
+  - network:
+    - addresses
+    - connectivity
+    - hostname
+    - etcfiles
+  - service: udevd
+  - path: /dev/mapper/control
+  - service: cri
+  - configuration: false
 restart: always
