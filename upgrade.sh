@@ -26,9 +26,13 @@ TALOS_IMAGE=ghcr.io/siderolabs/imager
 TALOS_NODE=10.21.7.2
 
 echo -e "${CYAN}🚀 Building and upgrading to ${YELLOW}${IMAGE_EXT}:${IMAGE_TAG}${NC}"
-
+docker buildx create --name local --use || true
 echo -e "${BLUE}📦 Building Docker image...${NC}"
-make docker-multipath-tools PLATFORM=linux/amd64 TARGET_ARGS="--tag=${IMAGE_EXT}:${IMAGE_TAG} --load"
+for i in {1..10}; do
+    if make docker-multipath-tools PLATFORM=linux/amd64 TARGET_ARGS="--tag=${IMAGE_EXT}:${IMAGE_TAG} --load"; then
+        break
+    fi
+done
 docker push ${IMAGE_EXT}:${IMAGE_TAG}
 echo -e "${GREEN}✅ Image built and pushed successfully!${NC}"
 

@@ -41,6 +41,7 @@ steps:
         rm -rf /rootfs/usr/local/share/
       - |
         mkdir -p /rootfs/usr/local/etc/containers
+        mkdir -p /rootfs/usr/local/lib/containers/multipathd
         cp /pkg/multipathd.yaml /rootfs/usr/local/etc/containers/
     test:
       - |

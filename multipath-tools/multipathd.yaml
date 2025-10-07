@@ -6,7 +6,7 @@ container:
     readonlyPaths: []
     writeableSysfs: true
   #   writeableRootfs: true
-  entrypoint: /usr/local/sbin/multipathd
+  entrypoint: /usr/local/sbin/multipathd/multipathd
   args:
     - -d
     - -v3
@@ -67,5 +67,4 @@ depends:
   - service: udevd
   - path: /dev/mapper/control
   - service: cri
-  - configuration: false
 restart: always
