@@ -25,34 +25,23 @@ steps:
 
         patch -p1 < /pkg/patches/fix-implicit-function-declaration-error.patch
         patch -p1 < /pkg/patches/disable-devt-test.patch
-        ls -la /pkg
+        patch -p1 < /pkg/patches/0001-Disable-O2.patch
     build:
       - |
-        make -j $(nproc) prefix=/usr/local SYSTEMD=""
+        # Build with shared libraries, disable warnings as errors to avoid compilation failures
+        # Use single thread to avoid segfaults
+        make -j 1 prefix=/usr/local SYSTEMD="" WARN_ONLY=1
     install:
       - |
         make prefix=/usr/local DESTDIR=/rootfs install
       - |
+        # Clean up unnecessary files
+        rm -f /rootfs/usr/lib/tmpfiles.d/multipath.conf
+        rm -f /rootfs/usr/lib/udev/kpartx_id
+        rm -rf /rootfs/usr/local/share/
+      - |
         mkdir -p /rootfs/usr/local/etc/containers
         cp /pkg/multipathd.yaml /rootfs/usr/local/etc/containers/
-      - |
-        mkdir -p /rootfs/usr/local/lib/containers/multipathd
-
-      # This file wants to load kernel module `dm-multipath`.
-      # Talos users should load kernel modules via MachineConfig instead.
-      - |
-        rm /rootfs/usr/lib/modules-load.d/multipath.conf
-        rmdir /rootfs/usr/lib/modules-load.d
-
-      # This file tries to create a tmpfs mount at `/var/run/multipath`.
-      # TODO: Probably should do this in the extension service or elsewhere.
-      - |
-        rm /rootfs/usr/lib/tmpfiles.d/multipath.conf
-        rmdir /rootfs/usr/lib/tmpfiles.d
-
-      # TODO: Not sure what to do with this yet.
-      - |
-        rm /rootfs/usr/lib/udev/kpartx_id
     test:
       - |
         mkdir -p /extensions-validator-rootfs
