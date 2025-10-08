@@ -6,7 +6,7 @@ container:
     readonlyPaths: []
     writeableSysfs: true
   #   writeableRootfs: true
-  entrypoint: /usr/local/sbin/multipathd/multipathd
+  entrypoint: /usr/local/sbin/multipathd
   args:
     - -d
     - -v3
