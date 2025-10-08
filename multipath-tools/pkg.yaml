@@ -23,6 +23,11 @@ steps:
         sed -i 's#$VERSION#{{ .VERSION }}#' /pkg/manifest.yaml
         tar -xzf multipath-tools.tar.gz --strip-components=1
 
+        # The compiler is segfaulting, so remove the -O2 optimization flag.
+        # The compiler/build tools are segfaulting, so remove the -O2 optimization flag from all Makefiles.
+        sed -i 's/CFLAGS = -O2/CFLAGS = /g' Makefile
+        sed -i 's/CFLAGS = -O2/CFLAGS = /g' multipathd/Makefile
+
     build:
       - |
         # Build with shared libraries, disable warnings as errors to avoid compilation failures
