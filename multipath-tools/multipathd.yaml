@@ -10,6 +10,8 @@ container:
   args:
     - -d
     - -v3
+  env:
+    - PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin
   mounts:
     # ld-musl-x86_64.so.1
     - source: /lib

@@ -41,12 +41,12 @@ steps:
         rm -rf /rootfs/usr/local/share/
       - |
         # Copy essential binaries for runtime (multipathd 0.11.0 needs ls and other utilities)
-        mkdir -p /rootfs/bin
-        cp /bin/ls /rootfs/bin/
-        cp /bin/sh /rootfs/bin/
-        cp /bin/cat /rootfs/bin/
-        cp /bin/mkdir /rootfs/bin/
-        cp /bin/rm /rootfs/bin/
+        mkdir -p /rootfs/usr/local/bin
+        cp /bin/ls /rootfs/usr/local/bin/
+        cp /bin/sh /rootfs/usr/local/bin/
+        cp /bin/cat /rootfs/usr/local/bin/
+        cp /bin/mkdir /rootfs/usr/local/bin/
+        cp /bin/rm /rootfs/usr/local/bin/
       - |
         mkdir -p /rootfs/usr/local/etc/containers
         mkdir -p /rootfs/usr/local/lib/containers/multipathd
