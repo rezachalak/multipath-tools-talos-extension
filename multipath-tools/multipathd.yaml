@@ -52,14 +52,6 @@ container:
         - bind
         - ro
     # Device files.
-    - source: /dev
-      destination: /dev
-      type: bind
-      options:
-        - rshared
-        - rbind
-        - rw
-    # Device files.
     - source: /dev/mapper
       destination: /dev/mapper
       type: bind
