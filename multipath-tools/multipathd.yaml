@@ -9,24 +9,27 @@ container:
   entrypoint: ./multipathd
   args:
     - -d
+    - -v3
   environment:
     - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    - LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/lib64:/lib
   mounts:
-    # ld-musl-x86_64.so.1
+    # System libraries
+    - source: /lib64
+      destination: /lib64
+      type: bind
+      options:
+        - bind
+        - ro
     - source: /lib
       destination: /lib
       type: bind
       options:
         - bind
         - ro
-    - source: /usr/lib
-      destination: /lib64
-      type: bind
-      options:
-        - bind
-        - ro
-    - source: /sbin
-      destination: /sbin
+    # multipath-tools binaries
+    - source: /usr/local/lib/containers/multipathd/sbin
+      destination: /usr/local/sbin
       type: bind
       options:
         - bind
