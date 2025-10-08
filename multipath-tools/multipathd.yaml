@@ -11,7 +11,7 @@ container:
     - -d
     - -v3
   environment:
-    - LIB=/lib64
+    - LD_LIBRARY_PATH=/lib:/lib64:/usr/lib64
   mounts:
     # System libraries
     - source: /lib64
