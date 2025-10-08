@@ -41,7 +41,7 @@ steps:
         container_root=/rootfs/usr/local/lib/containers/multipathd
         mkdir -p "${container_root}"
 
-        mv /rootfs/usr/local/bin/multipathd "${container_root}/multipathd"
+        mv /rootfs/usr/local/sbin/multipathd "${container_root}/multipathd"
 
       # This file wants to load kernel module `dm-multipath`.
       # Talos users should load kernel modules via MachineConfig instead.
