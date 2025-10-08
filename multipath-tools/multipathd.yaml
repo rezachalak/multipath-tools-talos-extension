@@ -20,27 +20,13 @@ container:
         - bind
         - ro
     - source: /lib64
-      destination: /lib64
+      destination: /usr/lib
       type: bind
       options:
         - bind
         - ro
     - source: /sbin
       destination: /sbin
-      type: bind
-      options:
-        - bind
-        - ro
-    # libcrypto.so and libc.so
-    - source: /usr/lib
-      destination: /usr/lib
-      type: bind
-      options:
-        - bind
-        - ro
-    # multipath-tools libs
-    - source: /usr/local/lib
-      destination: /usr/local/lib
       type: bind
       options:
         - bind
