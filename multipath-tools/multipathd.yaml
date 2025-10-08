@@ -11,12 +11,11 @@ container:
     - -d
     - -v3
   environment:
-    - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    - LIB=/usr/lib
+    - LIB=/lib64
   mounts:
     # System libraries
     - source: /lib64
-      destination: /usr/lib
+      destination: /lib64
       type: bind
       options:
         - bind
