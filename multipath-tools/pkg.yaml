@@ -42,7 +42,7 @@ steps:
         mkdir -p "${container_root}"
         mv /rootfs/usr/local/sbin/multipathd "${container_root}/multipathd"
         mv /rootfs/usr/local/sbin/multipath "${container_root}/multipath"
-        mv -r /rootfs/usr/local/{sbin,lib64,include} "${container_root}/"
+        mv /rootfs/usr/local/{sbin,lib64,include} "${container_root}/"
         
 
       # This file wants to load kernel module `dm-multipath`.
