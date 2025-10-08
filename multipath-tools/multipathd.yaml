@@ -28,8 +28,8 @@ container:
         - bind
         - ro
     # multipath-tools binaries
-    - source: /usr/local/lib/containers/multipathd/sbin
-      destination: /usr/local/sbin
+    - source: /sbin
+      destination: /sbin
       type: bind
       options:
         - bind
