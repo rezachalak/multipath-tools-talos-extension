@@ -30,7 +30,7 @@ container:
       type: bind
       options:
         - bind
-        - ro
+        - rw
     - source: /sbin
       destination: /sbin
       type: bind
