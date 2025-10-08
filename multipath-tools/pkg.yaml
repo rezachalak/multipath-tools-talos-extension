@@ -38,7 +38,6 @@ steps:
     install:
       - |
         make prefix=${prefix} DESTDIR=/rootfs install
-        cp ${prefix}/sbin/multipathd ${prefix}/
       - |
         mkdir -p /rootfs/usr/local/etc/containers
         cp /pkg/multipathd.yaml /rootfs/usr/local/etc/containers/
