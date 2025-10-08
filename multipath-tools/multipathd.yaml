@@ -5,7 +5,7 @@ container:
     maskedPaths: []
     readonlyPaths: []
     writeableSysfs: true
-  #   writeableRootfs: true
+    writeableRootfs: true
   entrypoint: /usr/local/sbin/multipathd
   args:
     - -d
