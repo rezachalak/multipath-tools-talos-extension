@@ -1,4 +1,4 @@
-VERSION: v0.1.2
+VERSION: v0.1.3
 # renovate: datasource=github-tags depName=opensvc/multipath-tools
 MULTIPATH_TOOLS_VERSION: 0.11.0
 MULTIPATH_TOOLS_SHA256: 0e7564e4984806006ec96134ea8823cfc461455675ce8aa5f363d94f696412f6

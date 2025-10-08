@@ -5,13 +5,11 @@ container:
     maskedPaths: []
     readonlyPaths: []
     writeableSysfs: true
-    writeableRootfs: true
+  #   writeableRootfs: true
   entrypoint: /usr/local/sbin/multipathd
   args:
     - -d
     - -v3
-  env:
-    - PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin
   mounts:
     # ld-musl-x86_64.so.1
     - source: /lib
@@ -30,12 +28,6 @@ container:
     # multipath-tools libs
     - source: /usr/local/lib
       destination: /usr/local/lib
-      type: bind
-      options:
-        - bind
-        - ro
-    - source: /usr/local/lib64
-      destination: /usr/local/lib64
       type: bind
       options:
         - bind
@@ -75,4 +67,5 @@ depends:
   - service: udevd
   - path: /dev/mapper/control
   - service: cri
+  - configuration: true
 restart: always
