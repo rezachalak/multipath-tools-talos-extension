@@ -6,14 +6,10 @@ container:
     readonlyPaths: []
     writeableSysfs: true
   #   writeableRootfs: true
-  entrypoint: /usr/local/sbin/multipathd
+  entrypoint: /usr/local/sbin/multipathd/multipathd
   args:
-    - --start
-    - --respawn-delay 2
-    - --respawn-max 5
-    - --respawn-period 1800
-    - /usr/sbin/multipathd
     - -d
+    - -v3
   mounts:
     # ld-musl-x86_64.so.1
     - source: /lib
@@ -42,7 +38,7 @@ container:
       options:
         - bind
         - ro
-    - source: /usr/local/sbin/multipathd
+    - source: /usr/local/sbin
       destination: /usr/local/sbin
       type: bind
       options:
