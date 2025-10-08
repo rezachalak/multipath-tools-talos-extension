@@ -18,6 +18,8 @@ steps:
         sha512: 8f545609fa20df7547428f2929571dc0df87c17d9f61f11aad3559446c2e94755e18b1c4b3780b3de92ec2cbc450939ca15a9d6c95551eee4084064d83874b2d
     env:
       PKG_CONFIG_PATH: /usr/lib/pkgconfig
+      prefix: /usr/local/lib/containers/multipathd
+      LIB: /usr/lib
     prepare:
       - |
         sed -i 's#$VERSION#{{ .VERSION }}#' /pkg/manifest.yaml
@@ -30,20 +32,16 @@ steps:
         patch -p1 < /pkg/patches/disable-exception-handling.patch
     build:
       - |
-        make -j $(nproc) prefix=/usr/local SYSTEMD=""
+        container_root=${prefix}
+        mkdir -p "${container_root}"
+        make -j $(nproc) prefix=${prefix} SYSTEMD=""
     install:
       - |
-        make prefix=/usr/local DESTDIR=/rootfs install
+        make prefix=${prefix} DESTDIR=/rootfs install
       - |
         mkdir -p /rootfs/usr/local/etc/containers
         cp /pkg/multipathd.yaml /rootfs/usr/local/etc/containers/
       - |
-        container_root=/rootfs/usr/local/lib/containers/multipathd
-        mkdir -p "${container_root}"
-        mv /rootfs/usr/local/sbin/multipathd "${container_root}/multipathd"
-        mv /rootfs/usr/local/sbin/multipath "${container_root}/multipath"
-        mv /rootfs/usr/local/{sbin,lib64,include} "${container_root}/"
-        
 
       # This file wants to load kernel module `dm-multipath`.
       # Talos users should load kernel modules via MachineConfig instead.

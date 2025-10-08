@@ -12,7 +12,7 @@ container:
     - -v3
   environment:
     - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    - LIB_DIR=/usr/lib
+    - LIB=/usr/lib
   mounts:
     # System libraries
     - source: /lib64
