@@ -19,8 +19,8 @@ container:
       options:
         - bind
         - ro
-    - source: /lib64
-      destination: /usr/lib
+    - source: /usr/lib
+      destination: /lib64
       type: bind
       options:
         - bind
