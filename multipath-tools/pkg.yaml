@@ -43,6 +43,7 @@ steps:
       - |
         mkdir -p /rootfs/usr/local/etc/containers
         mkdir -p /rootfs/usr/local/lib/containers/multipathd
+        cp /rootfs/usr/local/sbin/multipathd /rootfs/usr/local/lib/containers/multipathd
         cp /pkg/multipathd.yaml /rootfs/usr/local/etc/containers/
     test:
       - |
