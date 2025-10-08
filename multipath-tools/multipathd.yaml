@@ -25,13 +25,6 @@ container:
       options:
         - bind
         - ro
-    - source: /include
-      destination: /include
-      type: bind
-      options:
-        - rshared
-        - bind
-        - rw
     - source: /sbin
       destination: /sbin
       type: bind
