@@ -40,6 +40,14 @@ steps:
         rm -f /rootfs/usr/lib/udev/kpartx_id
         rm -rf /rootfs/usr/local/share/
       - |
+        # Copy essential binaries for runtime (multipathd 0.11.0 needs ls and other utilities)
+        mkdir -p /rootfs/bin
+        cp /bin/ls /rootfs/bin/
+        cp /bin/sh /rootfs/bin/
+        cp /bin/cat /rootfs/bin/
+        cp /bin/mkdir /rootfs/bin/
+        cp /bin/rm /rootfs/bin/
+      - |
         mkdir -p /rootfs/usr/local/etc/containers
         mkdir -p /rootfs/usr/local/lib/containers/multipathd
         cp /pkg/multipathd.yaml /rootfs/usr/local/etc/containers/
