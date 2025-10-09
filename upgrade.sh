@@ -131,8 +131,8 @@ docker buildx create --name local --use || true
 
 # Build Docker image
 echo -e "${BLUE}📦 Building Docker image...${NC}"
-for i in {1..10}; do
-    if make docker-multipath-tools PLATFORM=linux/amd64 TARGET_ARGS="--tag=${IMAGE_EXT} --load"; then
+for i in {1..2}; do
+    if make docker-multipath-tools PLATFORM=linux/amd64 TARGET_ARGS="--tag=${IMAGE_EXT}-installer --load"; then
         break
     fi
     if [ $i -eq 10 ]; then
@@ -145,26 +145,14 @@ done
 
 # Push image
 echo -e "${BLUE}📤 Pushing image to registry...${NC}"
-docker push ${IMAGE_EXT}
+docker push ${IMAGE_EXT}-installer
 echo -e "${GREEN}✅ Image built and pushed successfully!${NC}"
 
 # Deploy to nodes if specified
 if [[ -n "$TALOS_NODES" ]]; then
-    echo -e "${BLUE}🚀 Deploying to Talos nodes...${NC}"
+    echo -e "${BLUE}🚀 Deploying to Talos nodes: ${YELLOW}${TALOS_NODES}${NC}"
     
-    # Convert comma-separated list to array
-    IFS=',' read -ra NODE_ARRAY <<< "$TALOS_NODES"
-    
-    for node in "${NODE_ARRAY[@]}"; do
-        node=$(echo "$node" | xargs) # Trim whitespace
-        echo -e "${CYAN}  Upgrading node: ${YELLOW}${node}${NC}"
-        
-        # Add your deployment logic here
-        # Example: talosctl upgrade --nodes ${node} --image ${IMAGE_EXT}
-        # Or: talosctl apply-config --nodes ${node} --file config.yaml
-        
-        echo -e "${GREEN}  ✅ Node ${node} upgraded${NC}"
-    done
+    talosctl upgrade --nodes ${TALOS_NODES} --image ${IMAGE_EXT}-installer
     
     echo -e "${GREEN}✅ All nodes upgraded successfully!${NC}"
 else
