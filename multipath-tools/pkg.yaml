@@ -34,11 +34,11 @@ steps:
       - |
         container_root=${prefix}
         mkdir -p "${container_root}"
-        make -j $(nproc) prefix=${prefix} SYSTEMD=""
+        make -j $(nproc) SYSTEMD=""
     install:
       - |
-        make prefix=${prefix} DESTDIR=/rootfs install
-        cp /rootfs${prefix}/sbin/multipathd /rootfs${prefix}/
+        make DESTDIR=/rootfs install
+        cp /rootfs/sbin/multipathd /rootfs${prefix}/
       - |
         mkdir -p /rootfs/usr/local/etc/containers
         cp /pkg/multipathd.yaml /rootfs/usr/local/etc/containers/
