@@ -143,20 +143,22 @@ for i in {1..2}; do
     sleep 2
 done
 
-# Push image
-echo -e "${BLUE}📤 Pushing image to registry...${NC}"
-docker push ${IMAGE_EXT}-installer
-echo -e "${GREEN}✅ Image built and pushed successfully!${NC}"
+echo -e "${PURPLE}🔧 Building Talos installer...${NC}"
+docker run --rm -t -v /dev:/dev --privileged \
+    -v "$PWD/${DEST_DIR}:/out" "${TALOS_IMAGE}:${TALOS_VERSION}" \
+    --arch "${ARCH}" --system-extension-image ${IMAGE_EXT} "${PROFILE}"
+echo -e "${GREEN}✅ Installer built successfully!${NC}"
 
-# Deploy to nodes if specified
-if [[ -n "$TALOS_NODES" ]]; then
-    echo -e "${BLUE}🚀 Deploying to Talos nodes: ${YELLOW}${TALOS_NODES}${NC}"
-    
-    talosctl upgrade --nodes ${TALOS_NODES} --image ${IMAGE_EXT}-installer
-    
-    echo -e "${GREEN}✅ All nodes upgraded successfully!${NC}"
-else
-    echo -e "${YELLOW}ℹ️  Skipping deployment (no nodes specified)${NC}"
-fi
+crane push ${DEST_DIR}/installer-amd64.tar ${IMAGE_EXT}-installer
+echo -e "${GREEN}✅ Installer pushed successfully!${NC}"
 
-echo -e "${GREEN}✅ Done!${NC}"
+echo -e "${YELLOW}📋 Extensions before upgrade:${NC}"
+talosctl get extensions -n ${TALOS_NODES}
+
+echo -e "${CYAN}⬆️ Starting upgrade...${NC}"
+talosctl upgrade --nodes ${TALOS_NODES} --image ${IMAGE_EXT}-installer
+
+echo -e "${YELLOW}📋 Extensions after upgrade:${NC}"
+talosctl get extensions -n ${TALOS_NODES}
+
+echo -e "${GREEN}🎉 Upgrade completed successfully!${NC}"
