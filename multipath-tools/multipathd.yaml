@@ -36,6 +36,12 @@ container:
       options:
         - bind
         - ro
+    - source: /bin
+      destination: /bin
+      type: bind
+      options:
+        - bind
+        - ro
     - source: /usr/local/lib
       destination: /usr/local/lib
       type: bind
