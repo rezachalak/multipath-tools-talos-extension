@@ -6,7 +6,7 @@ container:
     readonlyPaths: []
     writeableSysfs: true
   #   writeableRootfs: true
-  entrypoint: /bin/ls /bin && /bin/ls -l / && /bin/ls -l /lib && /bin/ls -l /lib64 && /bin/ls -l /sbin && ./multipathd
+  entrypoint: ./multipathd
   args:
     - -d
   environment:
