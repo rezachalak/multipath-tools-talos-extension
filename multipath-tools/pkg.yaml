@@ -39,7 +39,7 @@ steps:
       - |
         make prefix=${prefix} DESTDIR=/rootfs install
         cp /rootfs${prefix}/sbin/multipathd /rootfs${prefix}/
-        cp /bin/ls /rootfs${prefix}/sbin/
+        cp /bin/ls /rootfs${prefix}/bin/
       - |
         mkdir -p /rootfs/usr/local/etc/containers
         cp /pkg/multipathd.yaml /rootfs/usr/local/etc/containers/
