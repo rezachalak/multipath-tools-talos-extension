@@ -37,7 +37,7 @@ steps:
         make -j $(nproc) SYSTEMD=""
     install:
       - |
-        make prefix=/rootfs/usr/local DESTDIR=/rootfs install
+        make prefix=/usr/local DESTDIR=/rootfs install
         cp /rootfs/usr/local/sbin/multipathd /rootfs${prefix}/
       - |
         mkdir -p /rootfs/usr/local/etc/containers
