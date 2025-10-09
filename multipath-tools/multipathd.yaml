@@ -5,62 +5,52 @@ container:
     maskedPaths: []
     readonlyPaths: []
     writeableSysfs: true
-    writeableRootfs: true
+  #   writeableRootfs: true
   entrypoint: ./multipathd
   args:
     - -d
-    - -v3
-  env:
-    - PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin
+  environment:
+    - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   mounts:
-    # ld-musl-x86_64.so.1
+    - source: /lib64
+      destination: /lib64
+      type: bind
+      options:
+        - bind
+        - ro
     - source: /lib
       destination: /lib
       type: bind
       options:
         - bind
         - ro
-    # libcrypto.so and libc.so
     - source: /usr/lib
       destination: /usr/lib
       type: bind
       options:
         - bind
         - ro
-    # multipath-tools libs
+    - source: /sbin
+      destination: /sbin
+      type: bind
+      options:
+        - bind
+        - ro
+    - source: /bin
+      destination: /bin
+      type: bind
+      options:
+        - bind
+        - ro
     - source: /usr/local/lib
       destination: /usr/local/lib
       type: bind
       options:
         - bind
         - ro
-    - source: /usr/local/lib64
-      destination: /usr/local/lib64
-      type: bind
-      options:
-        - bind
-        - ro
-    - source: /usr/local/sbin
-      destination: /usr/local/sbin
-      type: bind
-      options:
-        - bind
-        - ro
+    # Device files.
     - source: /dev/mapper
       destination: /dev/mapper
-      type: bind
-      options:
-        - bind
-        - rw
-    - source: /var/run/multipathd
-      destination: /var/run
-      type: bind
-      options:
-        - bind
-        - rw
-    # persistent storage for multipath
-    - source: /system/multipath/etc
-      destination: /usr/local/etc
       type: bind
       options:
         - rshared
