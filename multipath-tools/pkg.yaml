@@ -33,7 +33,7 @@ steps:
     build:
       - |
         container_root=${prefix}
-        mkdir -p "${container_root}"
+        mkdir -p "/rootfs${container_root}"
         make -j $(nproc) SYSTEMD=""
     install:
       - |
