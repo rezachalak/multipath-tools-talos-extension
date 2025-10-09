@@ -18,7 +18,6 @@ steps:
         sha512: {{ .MULTIPATH_TOOLS_SHA512 }}
     env:
       PKG_CONFIG_PATH: /usr/lib/pkgconfig
-      prefix: /usr/local/lib/containers/multipathd
       LIB: /usr/lib
     prepare:
       - |
@@ -32,13 +31,13 @@ steps:
         patch -p1 < /pkg/patches/disable-exception-handling.patch
     build:
       - |
-        container_root=${prefix}
+        container_root=/rootfs/usr/local/lib/containers/multipathd/
         mkdir -p "${container_root}"
-        make -j $(nproc) prefix=${prefix} SYSTEMD=""
+        make -j $(nproc) SYSTEMD=""
     install:
       - |
-        make prefix=${prefix} DESTDIR=/rootfs install
-        cp /rootfs${prefix}/sbin/multipathd /rootfs${prefix}/
+        make prefix=/usr/local DESTDIR=/rootfs install
+        cp /rootfs/usr/local/sbin/multipathd /rootfs/usr/local/lib/containers/multipathd/
       - |
         mkdir -p /rootfs/usr/local/etc/containers
         cp /pkg/multipathd.yaml /rootfs/usr/local/etc/containers/

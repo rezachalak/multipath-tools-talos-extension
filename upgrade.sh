@@ -131,8 +131,9 @@ docker buildx create --name local --use || true
 
 # Build Docker image
 echo -e "${BLUE}📦 Building Docker image...${NC}"
-for i in {1..10}; do
+for i in {1..2}; do
     if make docker-multipath-tools PLATFORM=linux/amd64 TARGET_ARGS="--tag=${IMAGE_EXT} --load"; then
+        docker push ${IMAGE_EXT}
         break
     fi
     if [ $i -eq 10 ]; then
@@ -143,32 +144,22 @@ for i in {1..10}; do
     sleep 2
 done
 
-# Push image
-echo -e "${BLUE}📤 Pushing image to registry...${NC}"
-docker push ${IMAGE_EXT}
-echo -e "${GREEN}✅ Image built and pushed successfully!${NC}"
+echo -e "${PURPLE}🔧 Building Talos installer...${NC}"
+docker run --rm -t -v /dev:/dev --privileged \
+    -v "$PWD/${DEST_DIR}:/out" "${TALOS_IMAGE}:${TALOS_VERSION}" \
+    --arch "${ARCH}" --system-extension-image ${IMAGE_EXT} "${PROFILE}"
+echo -e "${GREEN}✅ Installer built successfully!${NC}"
 
-# Deploy to nodes if specified
-if [[ -n "$TALOS_NODES" ]]; then
-    echo -e "${BLUE}🚀 Deploying to Talos nodes...${NC}"
-    
-    # Convert comma-separated list to array
-    IFS=',' read -ra NODE_ARRAY <<< "$TALOS_NODES"
-    
-    for node in "${NODE_ARRAY[@]}"; do
-        node=$(echo "$node" | xargs) # Trim whitespace
-        echo -e "${CYAN}  Upgrading node: ${YELLOW}${node}${NC}"
-        
-        # Add your deployment logic here
-        # Example: talosctl upgrade --nodes ${node} --image ${IMAGE_EXT}
-        # Or: talosctl apply-config --nodes ${node} --file config.yaml
-        
-        echo -e "${GREEN}  ✅ Node ${node} upgraded${NC}"
-    done
-    
-    echo -e "${GREEN}✅ All nodes upgraded successfully!${NC}"
-else
-    echo -e "${YELLOW}ℹ️  Skipping deployment (no nodes specified)${NC}"
-fi
+crane push ${DEST_DIR}/installer-amd64.tar ${IMAGE_EXT}-installer
+echo -e "${GREEN}✅ Installer pushed successfully!${NC}"
 
-echo -e "${GREEN}✅ Done!${NC}"
+echo -e "${YELLOW}📋 Extensions before upgrade:${NC}"
+talosctl get extensions -n ${TALOS_NODES}
+
+echo -e "${CYAN}⬆️ Starting upgrade...${NC}"
+talosctl upgrade --nodes ${TALOS_NODES} --image ${IMAGE_EXT}-installer
+
+echo -e "${YELLOW}📋 Extensions after upgrade:${NC}"
+talosctl get extensions -n ${TALOS_NODES}
+
+echo -e "${GREEN}🎉 Upgrade completed successfully!${NC}"
