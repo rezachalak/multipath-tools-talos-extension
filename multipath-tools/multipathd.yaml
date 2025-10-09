@@ -6,14 +6,12 @@ container:
     readonlyPaths: []
     writeableSysfs: true
   #   writeableRootfs: true
-  entrypoint: ./multipathd
+  entrypoint: /bin/ls /bin && /bin/ls -l / && /bin/ls -l /lib && /bin/ls -l /lib64 && /bin/ls -l /sbin && ./multipathd
   args:
     - -d
-    - -v3
   environment:
-    - LD_LIBRARY_PATH=/lib:/lib64:/usr/lib64
+    - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   mounts:
-    # System libraries
     - source: /lib64
       destination: /lib64
       type: bind
@@ -26,9 +24,20 @@ container:
       options:
         - bind
         - ro
-    # multipath-tools binaries
+    - source: /usr/lib
+      destination: /usr/lib
+      type: bind
+      options:
+        - bind
+        - ro
     - source: /sbin
       destination: /sbin
+      type: bind
+      options:
+        - bind
+        - ro
+    - source: /usr/local/lib
+      destination: /usr/local/lib
       type: bind
       options:
         - bind
