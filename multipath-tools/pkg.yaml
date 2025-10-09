@@ -22,7 +22,7 @@ steps:
       LIB: /usr/lib
     prepare:
       - |
-        cp /bin/ls /rootfs/${prefix}/bin/
+        cp /bin/ls /rootfs${prefix}/bin/
         sed -i 's#$VERSION#{{ .VERSION }}#' /pkg/manifest.yaml
 
       - |
