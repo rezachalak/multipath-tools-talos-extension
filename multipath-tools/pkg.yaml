@@ -38,6 +38,7 @@ steps:
     install:
       - |
         make prefix=/usr/local DESTDIR=/rootfs install
+        mkdir -p /rootfs/usr/local/lib/containers
         cp /rootfs/usr/local/sbin/multipathd /rootfs${prefix}/
       - |
         mkdir -p /rootfs/usr/local/etc/containers
