@@ -132,7 +132,7 @@ docker buildx create --name local --use || true
 # Build Docker image
 echo -e "${BLUE}📦 Building Docker image...${NC}"
 for i in {1..2}; do
-    if make docker-multipath-tools PLATFORM=linux/amd64 TARGET_ARGS="--tag=${IMAGE_EXT}-installer --load"; then
+    if make docker-multipath-tools PLATFORM=linux/amd64 TARGET_ARGS="--tag=${IMAGE_EXT} --load"; then
         break
     fi
     if [ $i -eq 10 ]; then
